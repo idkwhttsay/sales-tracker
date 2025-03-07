@@ -1,37 +1,39 @@
 'use client';
 
+import '../../envConfig.ts';
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 
 export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { user, login, loading } = useAuth();
+    const [user, setUser] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
         // Redirect if already logged in
-        if (!loading && user) {
+        if (user) {
             router.push('/');
         }
-    }, [user, loading, router]);
+    }, [user, router]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
 
-        const success = login(username, password);
-        if (!success) {
+        const validUsername = process.env.APP_USERNAME;
+        const validPassword = process.env.APP_PASSWORD;
+
+        console.log("TRUE USERNAME: " + validUsername);
+        console.log("TRUE PASSWORD: " + validPassword);
+
+        if(username === validUsername && password === validPassword) {
+            setUser(true);
+        } else {
             setError('Invalid username or password');
         }
     };
-
-    // Don't show the login form if loading or already logged in
-    if (loading || user) {
-        return <div className="min-h-screen flex items-center justify-center bg-gray-100">Loading...</div>;
-    }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
