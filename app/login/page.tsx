@@ -1,40 +1,33 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [user, setUser] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    useEffect(() => {
-        // Redirect if already logged in
-        if (user) {
-            router.push('/');
-        }
-    }, [user, router]);
+    const VALID_USERNAME = 'admin';
+    const VALID_PASSWORD = 'securepassword123';
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
         setIsLoading(true);
 
-        const validUsername = "admin";
-        const validPassword = "securepassword123";
-
-        // Simulating network delay for better UX
-        setTimeout(() => {
-            if(username === validUsername && password === validPassword) {
-                setUser(true);
-            } else {
-                setError('Incorrect username or password');
-            }
+        // Simple validation with hardcoded credentials
+        if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+            // Set some indication of logged in status (localStorage in this simple example)
+            localStorage.setItem('isLoggedIn', 'true');
+            // Redirect to home page
+            router.push('/');
+        } else {
+            setError('Invalid username or password');
             setIsLoading(false);
-        }, 500);
+        }
     };
 
     return (

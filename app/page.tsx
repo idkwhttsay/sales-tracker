@@ -5,16 +5,28 @@ import SaleForm from '../components/SaleForm';
 import DailySales from '../components/DailySales';
 import Navbar from '../components/NavBar';
 import { Sale } from '@/lib/types';
+import {useRouter} from "next/navigation";
 
 export default function Home() {
-  const [currentDate, setCurrentDate] = useState('');
-  const [keyPrefix, setKeyPrefix] = useState(Date.now().toString());
+    const router = useRouter();
+    const [currentDate, setCurrentDate] = useState('');
+    const [keyPrefix, setKeyPrefix] = useState(Date.now().toString());
 
-  useEffect(() => {
-    // Get current date in YYYY-MM-DD format
-    const today = new Date();
-    setCurrentDate(today.toISOString().split('T')[0]);
-  }, []);
+    useEffect(() => {
+        // Get current date in YYYY-MM-DD format
+        const today = new Date();
+        setCurrentDate(today.toISOString().split('T')[0]);
+    }, []);
+
+    useEffect(() => {
+        // Check if user is logged in
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+        if (!isLoggedIn) {
+            // Redirect to login page if not logged in
+            router.push('/login');
+        }
+    }, [router]);
 
   const handleSaleAdded = (sale: Sale) => {
     // Force refresh of sales list by updating the key
