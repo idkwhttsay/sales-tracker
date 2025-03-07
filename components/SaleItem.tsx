@@ -31,7 +31,7 @@ export default function SaleItem({ sale, onSaleDeleted }: SaleItemProps) {
     return (
         <div className="bg-white p-4 rounded-md shadow mb-2 flex justify-between items-center">
             <div>
-                <div className="font-medium">${sale.price.toFixed(2)}</div>
+                <div className="font-medium">₸{sale.price.toFixed(2)}</div>
                 <div className="text-sm text-gray-600">{sale.comment || 'No comment'}</div>
                 <div className="text-xs text-gray-500">
                     {new Date(sale.created_at).toLocaleTimeString()}

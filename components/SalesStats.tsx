@@ -16,11 +16,11 @@ export default function SalesStats({ sales }: SalesStatsProps) {
                 </div>
                 <div className="bg-green-50 p-3 rounded-md">
                     <div className="text-sm text-green-600 font-medium">Total Amount</div>
-                    <div className="text-2xl font-bold">${totalAmount.toFixed(2)}</div>
+                    <div className="text-2xl font-bold">₸{totalAmount.toFixed(2)}</div>
                 </div>
                 <div className="bg-purple-50 p-3 rounded-md">
                     <div className="text-sm text-purple-600 font-medium">Average Check</div>
-                    <div className="text-2xl font-bold">${averageCheck.toFixed(2)}</div>
+                    <div className="text-2xl font-bold">₸{averageCheck.toFixed(2)}</div>
                 </div>
             </div>
         </div>
