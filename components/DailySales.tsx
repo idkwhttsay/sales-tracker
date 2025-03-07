@@ -11,6 +11,7 @@ export default function DailySales({ date }: DailySalesProps) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const fetchSales = async () => {
         setLoading(true);
         try {
@@ -45,7 +46,7 @@ export default function DailySales({ date }: DailySalesProps) {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
-                    day: 'numeric'
+                    day: 'numeric',
                 })}
             </h2>
 

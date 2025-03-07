@@ -11,7 +11,7 @@ export default function Login() {
     const router = useRouter();
 
     const VALID_USERNAME = 'admin';
-    const VALID_PASSWORD = 'securepassword123';
+    const VALID_PASSWORD = '123';
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -22,6 +22,7 @@ export default function Login() {
         if (username === VALID_USERNAME && password === VALID_PASSWORD) {
             // Set some indication of logged in status (localStorage in this simple example)
             localStorage.setItem('isLoggedIn', 'true');
+            setIsLoading(false);
             // Redirect to home page
             router.push('/');
         } else {

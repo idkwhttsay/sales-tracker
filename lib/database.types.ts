@@ -34,9 +34,5 @@ export interface Database {
                 Relationships: []
             }
         }
-        Views: {}
-        Functions: {}
-        Enums: {}
-        CompositeTypes: {}
     }
 }

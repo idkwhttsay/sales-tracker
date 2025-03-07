@@ -28,7 +28,7 @@ export default function Home() {
         }
     }, [router]);
 
-  const handleSaleAdded = (sale: Sale) => {
+  const handleSaleAdded = () => {
     // Force refresh of sales list by updating the key
     setKeyPrefix(Date.now().toString());
   };

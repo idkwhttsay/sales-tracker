@@ -20,7 +20,7 @@ export default function Navbar() {
                         <h1 className="text-xl font-bold">Sales Tracker</h1>
                     </div>
                     <div>
-                        <span className="mr-4">Welcome!</span>
+                        <span className="mr-4">Welcome, Kamilla!</span>
                         <button
                             className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded"
                             onClick={() => handleLogout()}>
