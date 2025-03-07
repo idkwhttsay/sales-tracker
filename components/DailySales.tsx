@@ -42,11 +42,12 @@ export default function DailySales({ date }: DailySalesProps) {
     return (
         <div>
             <h2 className="text-xl font-semibold mb-4">
-                {new Date(date).toLocaleDateString('en-US', {
+                {new Date(date).toLocaleDateString("en-US", {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
+                    timeZone: 'UTC',
                 })}
             </h2>
 

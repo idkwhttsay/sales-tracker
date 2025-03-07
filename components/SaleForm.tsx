@@ -5,8 +5,12 @@ import { supabase } from '@/lib/supabase';
 import { SaleFormProps, Sale } from '@/lib/types';
 
 export default function SaleForm({ onSaleAdded }: SaleFormProps) {
+    // Get current date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
+
     const [price, setPrice] = useState('');
     const [comment, setComment] = useState('');
+    const [date, setDate] = useState(today);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -16,10 +20,6 @@ export default function SaleForm({ onSaleAdded }: SaleFormProps) {
         setLoading(true);
 
         try {
-            // Get current date in YYYY-MM-DD format
-            const today = new Date();
-            const date = today.toISOString().split('T')[0];
-
             const saleData = {
                 price: parseFloat(price),
                 comment,
@@ -37,6 +37,7 @@ export default function SaleForm({ onSaleAdded }: SaleFormProps) {
             // Reset form
             setPrice('');
             setComment('');
+            setDate(today); // Reset date to today
 
             // Notify parent component about the new sale
             if (onSaleAdded && data) {
@@ -61,7 +62,7 @@ export default function SaleForm({ onSaleAdded }: SaleFormProps) {
             )}
 
             <form onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
                             Price (₸)
@@ -90,6 +91,21 @@ export default function SaleForm({ onSaleAdded }: SaleFormProps) {
                             onChange={(e) => setComment(e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="Sale description"
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="saleDate" className="block text-sm font-medium text-gray-700 mb-1">
+                            Sale Date
+                        </label>
+                        <input
+                            type="date"
+                            id="saleDate"
+                            required
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            max={today}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         />
                     </div>
                 </div>

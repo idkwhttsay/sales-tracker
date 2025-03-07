@@ -4,17 +4,19 @@ import { useState, useEffect } from 'react';
 import SaleForm from '../components/SaleForm';
 import DailySales from '../components/DailySales';
 import Navbar from '../components/NavBar';
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
     const router = useRouter();
     const [currentDate, setCurrentDate] = useState('');
+    const [viewDate, setViewDate] = useState('');
     const [keyPrefix, setKeyPrefix] = useState(Date.now().toString());
 
     useEffect(() => {
         // Get current date in YYYY-MM-DD format
-        const today = new Date();
-        setCurrentDate(today.toISOString().split('T')[0]);
+        const today = new Date().toISOString().split('T')[0];
+        setCurrentDate(today);
+        setViewDate(today); // Initialize view date to today
     }, []);
 
     useEffect(() => {
@@ -27,26 +29,51 @@ export default function Home() {
         }
     }, [router]);
 
-  const handleSaleAdded = () => {
-    // Force refresh of sales list by updating the key
-    setKeyPrefix(Date.now().toString());
-  };
+    const handleSaleAdded = () => {
+        // Force refresh of sales list by updating the key
+        setKeyPrefix(Date.now().toString());
+    };
 
-  return (
-      <div className="min-h-screen bg-gray-100">
-        <Navbar />
-        <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <div className="space-y-6">
-            <SaleForm onSaleAdded={handleSaleAdded} />
+    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setViewDate(e.target.value);
+    };
 
-            {currentDate && (
-                <DailySales
-                    date={currentDate}
-                    key={`${keyPrefix}-${currentDate}`}
-                />
-            )}
-          </div>
-        </main>
-      </div>
-  );
+    return (
+        <div className="min-h-screen bg-gray-100">
+            <Navbar />
+            <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <div className="space-y-6">
+                    <SaleForm onSaleAdded={handleSaleAdded} />
+
+                    {currentDate && (
+                        <div>
+                            <div className="bg-white p-4 rounded-lg shadow-md mb-6">
+                                <div className="flex flex-wrap items-center justify-between">
+                                    <h2 className="text-xl font-semibold">Sales History</h2>
+                                    <div className="mt-2 sm:mt-0">
+                                        <label htmlFor="viewDate" className="mr-2 text-sm font-medium text-gray-700">
+                                            Select Date:
+                                        </label>
+                                        <input
+                                            type="date"
+                                            id="viewDate"
+                                            value={viewDate}
+                                            onChange={handleDateChange}
+                                            max={currentDate}
+                                            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <DailySales
+                                date={viewDate}
+                                key={`${keyPrefix}-${viewDate}`}
+                            />
+                        </div>
+                    )}
+                </div>
+            </main>
+        </div>
+    );
 }
