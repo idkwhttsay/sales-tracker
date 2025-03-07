@@ -10,8 +10,8 @@ export default function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    const VALID_USERNAME = 'admin';
-    const VALID_PASSWORD = '123';
+    const VALID_USERNAME = process.env.NEXT_PUBLIC_APP_USERNAME!;
+    const VALID_PASSWORD = process.env.NEXT_PUBLIC_APP_PASSWORD!;
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
