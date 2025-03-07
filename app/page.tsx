@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import SaleForm from '../components/SaleForm';
 import DailySales from '../components/DailySales';
 import Navbar from '../components/NavBar';
-import { Sale } from '@/lib/types';
 import {useRouter} from "next/navigation";
 
 export default function Home() {
