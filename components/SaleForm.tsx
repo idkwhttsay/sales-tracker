@@ -10,6 +10,7 @@ export default function SaleForm({ onSaleAdded }: SaleFormProps) {
 
     const [price, setPrice] = useState('');
     const [comment, setComment] = useState('');
+    const [orderId, setOrderId] = useState('');
     const [date, setDate] = useState(today);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -23,6 +24,7 @@ export default function SaleForm({ onSaleAdded }: SaleFormProps) {
             const saleData = {
                 price: parseFloat(price),
                 comment,
+                order_id: orderId,
                 date,
                 created_at: new Date().toISOString()
             };
@@ -37,6 +39,7 @@ export default function SaleForm({ onSaleAdded }: SaleFormProps) {
             // Reset form
             setPrice('');
             setComment('');
+            setOrderId('');
             setDate(today); // Reset date to today
 
             // Notify parent component about the new sale
@@ -62,7 +65,21 @@ export default function SaleForm({ onSaleAdded }: SaleFormProps) {
             )}
 
             <form onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                        <label htmlFor="orderId" className="block text-sm font-medium text-gray-700 mb-1">
+                            Order ID
+                        </label>
+                        <input
+                            type="text"
+                            id="orderId"
+                            value={orderId}
+                            onChange={(e) => setOrderId(e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="Order ID"
+                        />
+                    </div>
+
                     <div>
                         <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
                             Price (₸)

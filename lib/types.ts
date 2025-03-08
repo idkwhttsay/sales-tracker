@@ -1,4 +1,5 @@
 export interface Sale {
+    order_id: string;
     id: string;
     price: number;
     comment: string | null;

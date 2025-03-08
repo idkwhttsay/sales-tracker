@@ -30,8 +30,15 @@ export default function SaleItem({ sale, onSaleDeleted }: SaleItemProps) {
 
     return (
         <div className="bg-white p-4 rounded-md shadow mb-2 flex justify-between items-center">
-            <div>
-                <div className="font-medium">₸{sale.price.toFixed(2)}</div>
+            <div className="flex-grow">
+                <div className="flex items-center gap-2 mb-1">
+                    <div className="font-medium">₸{sale.price.toFixed(2)}</div>
+                    {sale.order_id && (
+                        <div className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
+                            Order: {sale.order_id}
+                        </div>
+                    )}
+                </div>
                 <div className="text-sm text-gray-600">{sale.comment || 'No comment'}</div>
                 <div className="text-xs text-gray-500">
                     {new Date(sale.created_at).toLocaleTimeString()}
@@ -40,7 +47,7 @@ export default function SaleItem({ sale, onSaleDeleted }: SaleItemProps) {
             <button
                 onClick={handleDelete}
                 disabled={deleting}
-                className="text-red-500 hover:text-red-700 disabled:opacity-50"
+                className="text-red-500 hover:text-red-700 disabled:opacity-50 ml-4"
             >
                 {deleting ? 'Deleting...' : 'Delete'}
             </button>
