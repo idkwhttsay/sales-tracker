@@ -38,3 +38,16 @@ export interface DailySalesProps {
 export interface LoginFormProps {
     onLogin: (username: string, password: string) => boolean;
 }
+
+export interface DateRangeSelectorProps {
+    startDate: string;
+    endDate: string;
+    onDateRangeChange: (startDate: string, endDate: string) => void;
+    maxDate: string;
+}
+
+export interface PeriodStatsProps {
+    maxDate: string;
+    initialStartDate: string;
+    initialEndDate: string;
+}
