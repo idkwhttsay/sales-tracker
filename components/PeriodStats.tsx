@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { Sale } from '@/lib/types';
 import DateRangeSelector from './DateRangeSelector';
 import SalesCharts from './SalesCharts';
+import { LoadingCard, LoadingCharts, LoadingText } from './LoadingComponents';
 
 interface PeriodStatsProps {
     maxDate: string;
@@ -23,9 +24,11 @@ export default function PeriodStats({
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [showCharts, setShowCharts] = useState(true);
+    const [loadingStats, setLoadingStats] = useState(false);
 
     const fetchSalesForPeriod = async () => {
         setLoading(true);
+        setLoadingStats(true);
         try {
             const { data, error } = await supabase
                 .from('sales')
@@ -40,7 +43,13 @@ export default function PeriodStats({
             console.error('Error fetching sales for period:', err);
             setError('Failed to load sales for the selected period. Please try again.');
         } finally {
-            setLoading(false);
+            // Simulate a minimum loading time for better UX
+            setTimeout(() => {
+                setLoading(false);
+                setTimeout(() => {
+                    setLoadingStats(false);
+                }, 400);
+            }, 800);
         }
     };
 
@@ -125,47 +134,75 @@ export default function PeriodStats({
             )}
 
             {loading ? (
-                <div className="text-center py-4">Loading statistics...</div>
+                <LoadingCard rows={2} />
             ) : (
                 <>
                     <div className="mb-4 p-3 bg-indigo-50 rounded-md">
                         <h3 className="text-lg font-medium text-indigo-800 mb-1">
                             {formatDateDisplay(startDate)} - {formatDateDisplay(endDate)}
                         </h3>
-                        <p className="text-indigo-600">
-                            {totalSales} {totalSales === 1 ? 'sale' : 'sales'} over {
-                            Object.keys(salesByDate).length
-                        } {Object.keys(salesByDate).length === 1 ? 'day' : 'days'}
-                        </p>
+                        {loadingStats ? (
+                            <LoadingText text="Calculating stats" />
+                        ) : (
+                            <p className="text-indigo-600">
+                                {totalSales} {totalSales === 1 ? 'sale' : 'sales'} over {
+                                Object.keys(salesByDate).length
+                            } {Object.keys(salesByDate).length === 1 ? 'day' : 'days'}
+                            </p>
+                        )}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                        <div className="bg-blue-50 p-3 rounded-md">
+                        <div className="bg-blue-50 p-3 rounded-md transition-all duration-300">
                             <div className="text-sm text-blue-600 font-medium">Total Sales</div>
-                            <div className="text-2xl font-bold">{totalSales}</div>
+                            {loadingStats ? (
+                                <div className="h-8 bg-blue-100 animate-pulse rounded w-16 mt-1"></div>
+                            ) : (
+                                <div className="text-2xl font-bold">{totalSales}</div>
+                            )}
                         </div>
-                        <div className="bg-green-50 p-3 rounded-md">
+                        <div className="bg-green-50 p-3 rounded-md transition-all duration-300">
                             <div className="text-sm text-green-600 font-medium">Total Amount</div>
-                            <div className="text-2xl font-bold">₸{totalAmount.toFixed(2)}</div>
+                            {loadingStats ? (
+                                <div className="h-8 bg-green-100 animate-pulse rounded w-24 mt-1"></div>
+                            ) : (
+                                <div className="text-2xl font-bold">₸{totalAmount.toFixed(2)}</div>
+                            )}
                         </div>
-                        <div className="bg-purple-50 p-3 rounded-md">
+                        <div className="bg-purple-50 p-3 rounded-md transition-all duration-300">
                             <div className="text-sm text-purple-600 font-medium">Average Check</div>
-                            <div className="text-2xl font-bold">₸{averageCheck.toFixed(2)}</div>
+                            {loadingStats ? (
+                                <div className="h-8 bg-purple-100 animate-pulse rounded w-24 mt-1"></div>
+                            ) : (
+                                <div className="text-2xl font-bold">₸{averageCheck.toFixed(2)}</div>
+                            )}
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <div className="bg-red-50 p-3 rounded-md">
+                        <div className="bg-red-50 p-3 rounded-md transition-all duration-300">
                             <div className="text-sm text-red-600 font-medium">Min Value</div>
-                            <div className="text-2xl font-bold">₸{minValue.toFixed(2)}</div>
+                            {loadingStats ? (
+                                <div className="h-8 bg-red-100 animate-pulse rounded w-24 mt-1"></div>
+                            ) : (
+                                <div className="text-2xl font-bold">₸{minValue.toFixed(2)}</div>
+                            )}
                         </div>
-                        <div className="bg-amber-50 p-3 rounded-md">
+                        <div className="bg-amber-50 p-3 rounded-md transition-all duration-300">
                             <div className="text-sm text-amber-600 font-medium">Median Value</div>
-                            <div className="text-2xl font-bold">₸{medianValue.toFixed(2)}</div>
+                            {loadingStats ? (
+                                <div className="h-8 bg-amber-100 animate-pulse rounded w-24 mt-1"></div>
+                            ) : (
+                                <div className="text-2xl font-bold">₸{medianValue.toFixed(2)}</div>
+                            )}
                         </div>
-                        <div className="bg-emerald-50 p-3 rounded-md">
+                        <div className="bg-emerald-50 p-3 rounded-md transition-all duration-300">
                             <div className="text-sm text-emerald-600 font-medium">Max Value</div>
-                            <div className="text-2xl font-bold">₸{maxValue.toFixed(2)}</div>
+                            {loadingStats ? (
+                                <div className="h-8 bg-emerald-100 animate-pulse rounded w-24 mt-1"></div>
+                            ) : (
+                                <div className="text-2xl font-bold">₸{maxValue.toFixed(2)}</div>
+                            )}
                         </div>
                     </div>
 
@@ -173,14 +210,18 @@ export default function PeriodStats({
                     <div className="flex justify-end mb-4">
                         <button
                             onClick={() => setShowCharts(!showCharts)}
-                            className="flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-md font-medium"
+                            className="flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-md font-medium transition-all duration-300"
                         >
                             {showCharts ? 'Hide Charts' : 'Show Charts'}
                         </button>
                     </div>
 
                     {/* Visualization section */}
-                    {showCharts && <SalesCharts sales={sales} period={true} />}
+                    {loading ? (
+                        <LoadingCharts />
+                    ) : (
+                        showCharts && <SalesCharts sales={sales} period={true} />
+                    )}
                 </>
             )}
         </div>

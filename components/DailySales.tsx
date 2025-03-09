@@ -6,6 +6,7 @@ import SaleItem from './SaleItem';
 import SalesStats from './SalesStats';
 import SalesCharts from './SalesCharts';
 import { DailySalesProps, Sale } from '@/lib/types';
+import { LoadingCard, LoadingCharts, LoadingTable } from './LoadingComponents';
 
 export default function DailySales({ date }: DailySalesProps) {
     const [sales, setSales] = useState<Sale[]>([]);
@@ -29,7 +30,10 @@ export default function DailySales({ date }: DailySalesProps) {
             console.error('Error fetching sales:', err);
             setError('Failed to load sales. Please refresh the page.');
         } finally {
-            setLoading(false);
+            // Simulate a minimum loading time for better UX
+            setTimeout(() => {
+                setLoading(false);
+            }, 800);
         }
     };
 
@@ -53,48 +57,56 @@ export default function DailySales({ date }: DailySalesProps) {
                 })}
             </h2>
 
-            <SalesStats sales={sales} />
-
-            {/* Toggle button for charts */}
-            {sales.length > 0 && (
-                <div className="flex justify-end mb-4">
-                    <button
-                        onClick={() => setShowCharts(!showCharts)}
-                        className="flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-md font-medium"
-                    >
-                        {showCharts ? 'Hide Charts' : 'Show Charts'}
-                    </button>
-                </div>
-            )}
-
-            {/* Sales charts */}
-            {showCharts && sales.length > 0 && (
-                <SalesCharts sales={sales} />
-            )}
-
-            {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    {error}
-                </div>
-            )}
-
             {loading ? (
-                <div className="text-center py-4">Loading sales...</div>
-            ) : sales.length === 0 ? (
-                <div className="text-center py-4 bg-white rounded-lg shadow-md">
-                    No sales recorded for today.
-                </div>
+                <>
+                    <LoadingCard rows={2} />
+                    {sales.length > 0 && <LoadingCharts />}
+                    <LoadingTable />
+                </>
             ) : (
-                <div className="bg-gray-50 p-4 rounded-lg shadow-md">
-                    <h3 className="text-lg font-medium mb-3">Sales List</h3>
-                    {sales.map(sale => (
-                        <SaleItem
-                            key={sale.id}
-                            sale={sale}
-                            onSaleDeleted={handleSaleDeleted}
-                        />
-                    ))}
-                </div>
+                <>
+                    <SalesStats sales={sales} />
+
+                    {/* Toggle button for charts */}
+                    {sales.length > 0 && (
+                        <div className="flex justify-end mb-4">
+                            <button
+                                onClick={() => setShowCharts(!showCharts)}
+                                className="flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-md font-medium transition-all duration-300"
+                            >
+                                {showCharts ? 'Hide Charts' : 'Show Charts'}
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Sales charts */}
+                    {showCharts && sales.length > 0 && (
+                        <SalesCharts sales={sales} />
+                    )}
+
+                    {error && (
+                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                            {error}
+                        </div>
+                    )}
+
+                    {sales.length === 0 ? (
+                        <div className="text-center py-4 bg-white rounded-lg shadow-md">
+                            No sales recorded for today.
+                        </div>
+                    ) : (
+                        <div className="bg-gray-50 p-4 rounded-lg shadow-md">
+                            <h3 className="text-lg font-medium mb-3">Sales List</h3>
+                            {sales.map(sale => (
+                                <SaleItem
+                                    key={sale.id}
+                                    sale={sale}
+                                    onSaleDeleted={handleSaleDeleted}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </>
             )}
         </div>
     );
