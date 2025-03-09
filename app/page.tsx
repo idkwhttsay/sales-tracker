@@ -1,10 +1,10 @@
-// Now, let's update the Home component (page.tsx) to include our new period stats feature
 'use client';
 
 import { useState, useEffect } from 'react';
 import SaleForm from '../components/SaleForm';
 import DailySales from '../components/DailySales';
-import PeriodStats from '../components/PeriodStats'; // Import the new component
+import PeriodStats from '../components/PeriodStats';
+import ExportSalesData from '../components/ExportSalesData';
 import Navbar from '../components/NavBar';
 import { useRouter } from "next/navigation";
 
@@ -13,7 +13,8 @@ export default function Home() {
     const [currentDate, setCurrentDate] = useState('');
     const [viewDate, setViewDate] = useState('');
     const [keyPrefix, setKeyPrefix] = useState(Date.now().toString());
-    const [showPeriodStats, setShowPeriodStats] = useState(false); // Toggle for period stats
+    const [showPeriodStats, setShowPeriodStats] = useState(false);
+    const [showExportTool, setShowExportTool] = useState(false); // Add state for export tool
 
     useEffect(() => {
         // Get current date in YYYY-MM-DD format
@@ -55,14 +56,17 @@ export default function Home() {
                 <div className="space-y-6">
                     <SaleForm onSaleAdded={handleSaleAdded} />
 
-                    {/* Toggle between daily view and period stats */}
+                    {/* Toggle between views */}
                     <div className="bg-white p-4 rounded-lg shadow-md mb-6">
                         <div className="flex flex-wrap items-center justify-between">
-                            <div className="flex items-center space-x-4">
+                            <div className="flex items-center space-x-2 flex-wrap">
                                 <button
-                                    onClick={() => setShowPeriodStats(false)}
-                                    className={`px-4 py-2 rounded-md ${
-                                        !showPeriodStats
+                                    onClick={() => {
+                                        setShowPeriodStats(false);
+                                        setShowExportTool(false);
+                                    }}
+                                    className={`px-4 py-2 rounded-md mb-2 sm:mb-0 ${
+                                        !showPeriodStats && !showExportTool
                                             ? 'bg-indigo-600 text-white'
                                             : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                                     }`}
@@ -70,18 +74,34 @@ export default function Home() {
                                     Daily View
                                 </button>
                                 <button
-                                    onClick={() => setShowPeriodStats(true)}
-                                    className={`px-4 py-2 rounded-md ${
-                                        showPeriodStats
+                                    onClick={() => {
+                                        setShowPeriodStats(true);
+                                        setShowExportTool(false);
+                                    }}
+                                    className={`px-4 py-2 rounded-md mb-2 sm:mb-0 ${
+                                        showPeriodStats && !showExportTool
                                             ? 'bg-indigo-600 text-white'
                                             : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                                     }`}
                                 >
                                     Period Stats
                                 </button>
+                                <button
+                                    onClick={() => {
+                                        setShowExportTool(true);
+                                        setShowPeriodStats(false);
+                                    }}
+                                    className={`px-4 py-2 rounded-md mb-2 sm:mb-0 ${
+                                        showExportTool
+                                            ? 'bg-indigo-600 text-white'
+                                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                    }`}
+                                >
+                                    Export Data
+                                </button>
                             </div>
 
-                            {!showPeriodStats && (
+                            {!showPeriodStats && !showExportTool && (
                                 <div className="mt-2 sm:mt-0">
                                     <label htmlFor="viewDate" className="mr-2 text-sm font-medium text-gray-700">
                                         Select Date:
@@ -101,7 +121,9 @@ export default function Home() {
 
                     {currentDate && (
                         <>
-                            {showPeriodStats ? (
+                            {showExportTool ? (
+                                <ExportSalesData maxDate={currentDate} />
+                            ) : showPeriodStats ? (
                                 <PeriodStats
                                     maxDate={currentDate}
                                     initialStartDate={getDefaultStartDate()}
