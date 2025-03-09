@@ -4,12 +4,14 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import SaleItem from './SaleItem';
 import SalesStats from './SalesStats';
+import SalesCharts from './SalesCharts';
 import { DailySalesProps, Sale } from '@/lib/types';
 
 export default function DailySales({ date }: DailySalesProps) {
     const [sales, setSales] = useState<Sale[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [showCharts, setShowCharts] = useState(true);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const fetchSales = async () => {
@@ -52,6 +54,23 @@ export default function DailySales({ date }: DailySalesProps) {
             </h2>
 
             <SalesStats sales={sales} />
+
+            {/* Toggle button for charts */}
+            {sales.length > 0 && (
+                <div className="flex justify-end mb-4">
+                    <button
+                        onClick={() => setShowCharts(!showCharts)}
+                        className="flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-md font-medium"
+                    >
+                        {showCharts ? 'Hide Charts' : 'Show Charts'}
+                    </button>
+                </div>
+            )}
+
+            {/* Sales charts */}
+            {showCharts && sales.length > 0 && (
+                <SalesCharts sales={sales} />
+            )}
 
             {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">

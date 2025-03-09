@@ -51,3 +51,22 @@ export interface PeriodStatsProps {
     initialStartDate: string;
     initialEndDate: string;
 }
+
+export interface ChartDataPoint {
+    date: string;
+    total: number;
+    count: number;
+}
+
+export interface PriceRangeDataPoint {
+    range: string;
+    count: number;
+    total: number;
+}
+
+export interface HourlyDataPoint {
+    hour: number;
+    sales: number;
+    total: number;
+    label: string;
+}

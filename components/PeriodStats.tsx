@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Sale } from '@/lib/types';
 import DateRangeSelector from './DateRangeSelector';
+import SalesCharts from './SalesCharts';
 
 interface PeriodStatsProps {
     maxDate: string;
@@ -21,6 +22,7 @@ export default function PeriodStats({
     const [sales, setSales] = useState<Sale[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [showCharts, setShowCharts] = useState(true);
 
     const fetchSalesForPeriod = async () => {
         setLoading(true);
@@ -152,7 +154,7 @@ export default function PeriodStats({
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                         <div className="bg-red-50 p-3 rounded-md">
                             <div className="text-sm text-red-600 font-medium">Min Value</div>
                             <div className="text-2xl font-bold">₸{minValue.toFixed(2)}</div>
@@ -166,6 +168,19 @@ export default function PeriodStats({
                             <div className="text-2xl font-bold">₸{maxValue.toFixed(2)}</div>
                         </div>
                     </div>
+
+                    {/* Toggle button for charts */}
+                    <div className="flex justify-end mb-4">
+                        <button
+                            onClick={() => setShowCharts(!showCharts)}
+                            className="flex items-center px-4 py-2 bg-indigo-100 text-indigo-700 hover:bg-indigo-200 rounded-md font-medium"
+                        >
+                            {showCharts ? 'Hide Charts' : 'Show Charts'}
+                        </button>
+                    </div>
+
+                    {/* Visualization section */}
+                    {showCharts && <SalesCharts sales={sales} period={true} />}
                 </>
             )}
         </div>
