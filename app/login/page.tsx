@@ -10,23 +10,39 @@ export default function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    const VALID_USERNAME = process.env.NEXT_PUBLIC_APP_USERNAME!;
-    const VALID_PASSWORD = process.env.NEXT_PUBLIC_APP_PASSWORD!;
-
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
         setIsLoading(true);
 
-        // Simple validation with hardcoded credentials
-        if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-            // Set some indication of logged in status (localStorage in this simple example)
-            localStorage.setItem('isLoggedIn', 'true');
-            setIsLoading(false);
-            // Redirect to home page
-            router.push('/');
-        } else {
-            setError('Invalid username or password');
+        try {
+            const response = await fetch('/api/auth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                // Set logged in status using a secure httpOnly cookie with the API
+                // For simplicity here, we're using localStorage
+                localStorage.setItem('isLoggedIn', 'true');
+
+                // You could also store a session timestamp
+                localStorage.setItem('loginTimestamp', Date.now().toString());
+
+                // Redirect to home page
+                router.push('/');
+            } else {
+                setError(data.error || 'Authentication failed');
+            }
+        } catch (err) {
+            console.error('Login error:', err);
+            setError('Something went wrong. Please try again.');
+        } finally {
             setIsLoading(false);
         }
     };

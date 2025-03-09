@@ -1,12 +1,44 @@
 'use client';
-import {useRouter} from "next/navigation";
+import { useEffect } from 'react';
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
     const router = useRouter();
 
+    // Check for session timeout
+    useEffect(() => {
+        const checkSession = () => {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (!isLoggedIn) return;
+
+            const loginTimestamp = localStorage.getItem('loginTimestamp');
+            if (!loginTimestamp) return;
+
+            // Session timeout after 8 hours (28800000 ms)
+            const SESSION_TIMEOUT = 8 * 60 * 60 * 1000;
+            const now = Date.now();
+            const sessionAge = now - parseInt(loginTimestamp);
+
+            if (sessionAge > SESSION_TIMEOUT) {
+                // Session expired
+                handleLogout();
+                alert('Your session has expired. Please log in again.');
+            }
+        };
+
+        // Check on component mount
+        checkSession();
+
+        // Set up periodic checks (every 5 minutes)
+        const interval = setInterval(checkSession, 5 * 60 * 1000);
+
+        return () => clearInterval(interval);
+    }, [router]);
+
     const handleLogout = () => {
         // Remove logged in status
         localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('loginTimestamp');
 
         // Redirect to login page
         router.push('/login');
