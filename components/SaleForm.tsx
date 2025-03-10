@@ -40,7 +40,6 @@ export default function SaleForm({ onSaleAdded }: SaleFormProps) {
             setPrice('');
             setComment('');
             setOrderId('');
-            setDate(today); // Reset date to today
 
             // Notify parent component about the new sale
             if (onSaleAdded && data) {
