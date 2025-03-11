@@ -1,11 +1,24 @@
+// Modified route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
     try {
+        // Verify the custom header
+        const appAuthHeader = request.headers.get('X-App-Auth');
+        const xRequestedWith = request.headers.get('X-Requested-With');
+
+        // Check for expected headers
+        const validAppAuth = process.env.APP_AUTH_KEY || 'app-frontend';
+        if (appAuthHeader !== validAppAuth || xRequestedWith !== 'XMLHttpRequest') {
+            return NextResponse.json(
+                { error: 'Unauthorized access' },
+                { status: 403 }
+            );
+        }
+
         const { username, password } = await request.json();
 
-        // Use environment variables without NEXT_PUBLIC_ prefix
-        // These will only be accessible on the server
+        // Rest of your authentication logic remains the same
         const validUsername = process.env.APP_USERNAME;
         const validPassword = process.env.APP_PASSWORD;
 
@@ -18,7 +31,6 @@ export async function POST(request: NextRequest) {
         }
 
         if (username === validUsername && password === validPassword) {
-            // Don't include sensitive data in the response
             return NextResponse.json({ success: true });
         } else {
             return NextResponse.json(
