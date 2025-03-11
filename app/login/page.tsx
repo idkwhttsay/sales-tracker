@@ -20,21 +20,18 @@ export default function Login() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest', // Add this header
+                    'X-App-Auth': process.env.NEXT_PUBLIC_APP_AUTH_KEY || 'app-frontend', // Add a custom header
                 },
                 body: JSON.stringify({ username, password }),
             });
 
             const data = await response.json();
 
+            // Rest of your code remains the same
             if (response.ok && data.success) {
-                // Set logged in status using a secure httpOnly cookie with the API
-                // For simplicity here, we're using localStorage
                 localStorage.setItem('isLoggedIn', 'true');
-
-                // You could also store a session timestamp
                 localStorage.setItem('loginTimestamp', Date.now().toString());
-
-                // Redirect to home page
                 router.push('/');
             } else {
                 setError(data.error || 'Authentication failed');
