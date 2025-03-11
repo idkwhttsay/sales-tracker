@@ -23,7 +23,6 @@ export async function POST(request: NextRequest) {
         const validPassword = process.env.APP_PASSWORD;
 
         if (!validUsername || !validPassword) {
-            console.error('Authentication credentials not configured in environment variables');
             return NextResponse.json(
                 { error: 'Authentication system is not properly configured' },
                 { status: 500 }
