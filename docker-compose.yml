@@ -1,0 +1,23 @@
+services:
+  sales-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sales-app
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.local
+    restart: unless-stopped
+    volumes:
+      - app_logs:/app/logs
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  app_logs:
+    driver: local
