@@ -26,4 +26,4 @@ COPY public/ ./public/
 RUN npm run build
 
 # start the website
-CMD ["npm", "run", "start"]
+CMD ["npm", "start"]
