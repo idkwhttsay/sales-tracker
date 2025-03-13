@@ -8,7 +8,7 @@ COPY package.json package-lock.json ./
 # install dependencies
 RUN npm ci
 
-COPY .env.local ./.env
+COPY .env.local .env
 COPY docker-compose.yml ./
 COPY eslint.config.mjs ./
 COPY middleware.ts ./
