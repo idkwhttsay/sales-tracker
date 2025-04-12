@@ -86,13 +86,13 @@ export default function SaleForm({ onSaleAdded }: SaleFormProps) {
                         <input
                             type="number"
                             id="price"
-                            min="0.01"
-                            step="0.01"
+                            min="0"
+                            step="1"
                             required
                             value={price}
                             onChange={(e) => setPrice(e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                            placeholder="0.00"
+                            placeholder="0"
                         />
                     </div>
 
