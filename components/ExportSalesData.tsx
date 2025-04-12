@@ -61,7 +61,7 @@ export default function ExportSalesData({ maxDate }: ExportSalesDataProps) {
             // Add each sale in the required format
             salesByDate[date].forEach(sale => {
                 const orderId = sale.order_id || '';
-                const price = sale.price.toFixed(2);
+                const price = sale.price;
                 const comment = sale.comment || '';
 
                 resultText += `${orderId}-${price}-${comment}\n`;
