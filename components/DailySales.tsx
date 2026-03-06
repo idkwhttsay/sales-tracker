@@ -24,6 +24,8 @@ export default function DailySales({ date }: DailySalesProps) {
                 .eq('date', date)
                 .order('created_at', { ascending: false });
 
+            console.log('Fetched sales data:', data);
+
             if (error) throw error;
             setSales(data as Sale[] || []);
         } catch (err) {
